@@ -1,0 +1,15 @@
+{
+  "name": "YouTube Timestamps 2.0",
+  "version": "1.0",
+  "description": "Gets collection of timestamps from video description or comments.",
+  "permissions": ["tabs"],
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["js/handleYoutube.js"],
+      "css": ["css/yt_timestamps.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "manifest_version": 2
+}

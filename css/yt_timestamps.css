@@ -1,0 +1,22 @@
+a.selected_yt_timestamp_link {
+  background-color: #777;
+  border-radius: 16px;
+  padding-right: 6px;
+  padding-left: 6px;
+  color: white !important;
+}
+
+h2.yt_timestamp_nowplaying {
+  /* border-radius: 3px;
+  padding: 3px !important;
+  margin-left: 5px !important; */
+  font-size: 1.4rem !important;
+  /* background-color: #777 !important;
+  color: white !important;
+  display: inline-block !important; */
+  border-radius: 12px !important;
+  background-color: #777 !important;
+  color: white !important;
+  display: inline-block !important;
+  padding: 5px !important;
+}
