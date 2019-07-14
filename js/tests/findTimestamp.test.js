@@ -68,11 +68,11 @@ describe('Testing correct attributes on links', () => {
 
   test('Testing current class added to current timestamp link', () => {
     f_timestamps.findCurrentTimestamps(0);
-    expect(document.querySelectorAll('a.yt_timestamp_selected').length).toBeTruthy();
-    expect(document.querySelector('a.yt_timestamp_selected').textContent).toBe('00:00');
+    expect(document.querySelectorAll('a.selected_yt_timestamp_link').length).toBeTruthy();
+    expect(document.querySelector('a.selected_yt_timestamp_link').textContent).toBe('00:00');
 
     f_timestamps.findCurrentTimestamps(430);
-    expect(document.querySelectorAll('a.yt_timestamp_selected').length).toBe(1);
-    expect(document.querySelector('a.yt_timestamp_selected').textContent).toBe('04:06');
+    expect(document.querySelectorAll('a.selected_yt_timestamp_link').length).toBe(1);
+    expect(document.querySelector('a.selected_yt_timestamp_link').textContent).toBe('04:06');
   });
 });

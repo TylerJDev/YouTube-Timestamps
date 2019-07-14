@@ -66,7 +66,7 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
   var currentTimestamp = timestamps_current.filter(currEle => currEle[0].textContent === determineTimeSlot(currentVideoTime, timestamps_current.map(curr => curr[0].textContent)))
   var timestampObj = {'links_tracks': timestamps_current, 'current_link': currentTimestamp[0][0], 'current_track': currentTimestamp[0][1], 'current_video': window.location.href};
 
-  console.log(timestampObj);
+  //console.log(timestampObj);
   if (!timestampObj.current_link.classList.contains('selected_yt_timestamp_link')) {
     // Remove previous selected classes
     Array.from(document.querySelectorAll('a.selected_yt_timestamp_link'), curr => curr.classList.remove('selected_yt_timestamp_link'));
@@ -85,12 +85,11 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
     headingTimestampTitle.textContent = timestampObj.current_track;
   }
 
-  console.log(timestampObj);
+  //console.log(timestampObj);
   return timestampObj;
 }
 
 function grabTimestampText(ele, descr) {
-  //debugger;
   var siblings = [ele.previousSibling, ele.nextSibling]; // [0] = Some random text not related, [1] Proper timestamp text
   var descrText = descr.textContent.split('\n');
 
@@ -99,6 +98,16 @@ function grabTimestampText(ele, descr) {
       return curr;
     } else if (siblings[1] !== null && curr.indexOf(siblings[1].textContent.trim()) >= 0 && curr.indexOf(ele.textContent) >= 0) {
       return curr;
+    } else if (siblings[0] !== null &&
+      (siblings[0].textContent.split('\n').length > 1 && curr.indexOf(siblings[0].textContent.trim().split('\n').pop()) >= 0))
+    {
+      return siblings[0].textContent.split('\n').pop();
+    } else if (siblings[1] !== null &&
+      (siblings[1].textContent.split('\n').length > 1 && curr.indexOf(siblings[1].textContent.trim().split('\n').pop()) >= 0))
+    {
+      return siblings[1].textContent.split('\n').pop();
+    } else if (curr.indexOf(ele.textContent) >= 0 && curr.replace(ele.textContent).trim().length) {
+      return curr.replace(ele.textContent).trim();
     }
   });
 

@@ -34,6 +34,23 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
 
   return timestampObj;
 }
+/* function grabTimestampText(ele, descr) {
+  var siblings = [ele.previousSibling, ele.nextSibling]; // [0] = Some random text not related, [1] Proper timestamp text
+  var descrText = descr.textContent.split('\n');
+
+  var timestampText = descrText.filter(function(curr, idx) {
+    if (siblings[0] !== null && curr.indexOf(siblings[0].textContent.trim()) >= 0 && curr.indexOf(ele.textContent) >= 0) {
+      return curr;
+    } else if (siblings[1] !== null && curr.indexOf(siblings[1].textContent.trim()) >= 0 && curr.indexOf(ele.textContent) >= 0) {
+      return curr;
+    }
+  });
+
+  if (timestampText.length) {
+    return timestampText[0].replace(ele.textContent, '').trim();
+  }
+} */
+
 function grabTimestampText(ele, descr) {
   var siblings = [ele.previousSibling, ele.nextSibling]; // [0] = Some random text not related, [1] Proper timestamp text
   var descrText = descr.textContent.split('\n');
@@ -43,6 +60,16 @@ function grabTimestampText(ele, descr) {
       return curr;
     } else if (siblings[1] !== null && curr.indexOf(siblings[1].textContent.trim()) >= 0 && curr.indexOf(ele.textContent) >= 0) {
       return curr;
+    } else if (siblings[0] !== null &&
+      (siblings[0].textContent.split('\n').length > 1 && curr.indexOf(siblings[0].textContent.trim().split('\n').pop()) >= 0))
+    {
+      return siblings[0].textContent.split('\n').pop();
+    } else if (siblings[1] !== null &&
+      (siblings[1].textContent.split('\n').length > 1 && curr.indexOf(siblings[1].textContent.trim().split('\n').pop()) >= 0))
+    {
+      return siblings[1].textContent.split('\n').pop();
+    } else if (curr.indexOf(ele.textContent) >= 0 && curr.replace(ele.textContent).trim().length) {
+      return curr.replace(ele.textContent).trim();
     }
   });
 
