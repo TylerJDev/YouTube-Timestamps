@@ -22,21 +22,23 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
   }
 
   // Grab the current track based on currentVideoTime parameter passed
-  var currentTimestamp = timestamps_current.filter(currEle => currEle[0].textContent === c_timestamps.determineTimeSlot(currentVideoTime, timestamps_current.map(curr => curr[0].textContent)))
-  console.log(currentTimestamp);
-  var timestampObj = {'links_tracks': timestamps_current, 'current_link': currentTimestamp[0][0], 'current_track': currentTimestamp[0][1], 'current_video': window.location.href};
+  var currentTimestamp = timestamps_current.filter(currEle => currEle[0].textContent === c_timestamps.determineTimeSlot(currentVideoTime, timestamps_current.map(curr => curr[0].textContent)));
 
-  // Remove previous selected classes
-  Array.from(document.querySelectorAll('a.selected_yt_timestamp_link'), curr => curr.classList.remove('selected_yt_timestamp_link'));
+  if (currentTimestamp.length) {
+    var timestampObj = {'links_tracks': timestamps_current, 'current_link': currentTimestamp[0][0], 'current_track': currentTimestamp[0][1], 'current_video': window.location.href};
 
-  // Add class to current link
-  timestampObj.current_link.classList.add('selected_yt_timestamp_link');
+    // Remove previous selected classes
+    Array.from(document.querySelectorAll('a.selected_yt_timestamp_link'), curr => curr.classList.remove('selected_yt_timestamp_link'));
 
-  return timestampObj;
+    // Add class to current link
+    timestampObj.current_link.classList.add('selected_yt_timestamp_link');
+
+    return timestampObj;
+  }
 }
 /* function grabTimestampText(ele, descr) {
-  var siblings = [ele.previousSibling, ele.nextSibling]; // [0] = Some random text not related, [1] Proper timestamp text
-  var descrText = descr.textContent.split('\n');
+var siblings = [ele.previousSibling, ele.nextSibling]; // [0] = Some random text not related, [1] Proper timestamp text
+var descrText = descr.textContent.split('\n');
 
   var timestampText = descrText.filter(function(curr, idx) {
     if (siblings[0] !== null && curr.indexOf(siblings[0].textContent.trim()) >= 0 && curr.indexOf(ele.textContent) >= 0) {

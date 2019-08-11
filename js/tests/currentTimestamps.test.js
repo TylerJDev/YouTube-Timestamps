@@ -20,5 +20,6 @@ describe('Tesitng currentTimestamp module', () => {
   test('Get current timestamp time', () => {
     expect(c_timestamps.determineTimeSlot(3, ['0:00', '2:33', '3:56', '6:40', '11:23'])).toBe('0:00');
     expect(c_timestamps.determineTimeSlot(690, ['0:00', '2:33', '3:56', '6:40', '11:23'])).toBe('11:23');
+    expect(c_timestamps.determineTimeSlot(20, ['0:05', '0:10', '0:19'])).toBe('0:19');
   })
 });

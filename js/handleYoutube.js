@@ -64,29 +64,31 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
 
   // Grab the current track based on currentVideoTime parameter passed
   var currentTimestamp = timestamps_current.filter(currEle => currEle[0].textContent === determineTimeSlot(currentVideoTime, timestamps_current.map(curr => curr[0].textContent)))
-  var timestampObj = {'links_tracks': timestamps_current, 'current_link': currentTimestamp[0][0], 'current_track': currentTimestamp[0][1], 'current_video': window.location.href};
 
-  //console.log(timestampObj);
-  if (!timestampObj.current_link.classList.contains('selected_yt_timestamp_link')) {
-    // Remove previous selected classes
-    Array.from(document.querySelectorAll('a.selected_yt_timestamp_link'), curr => curr.classList.remove('selected_yt_timestamp_link'));
+  if (currentTimestamp.length) {
+    var timestampObj = {'links_tracks': timestamps_current, 'current_link': currentTimestamp[0][0], 'current_track': currentTimestamp[0][1], 'current_video': window.location.href};
+
+    if (!timestampObj.current_link.classList.contains('selected_yt_timestamp_link')) {
+      // Remove previous selected classes
+      Array.from(document.querySelectorAll('a.selected_yt_timestamp_link'), curr => curr.classList.remove('selected_yt_timestamp_link'));
+    }
+
+    // Add class to current link
+    timestampObj.current_link.classList.add('selected_yt_timestamp_link');
+
+    // Create heading if it doesn't exist
+    var headingTimestampTitle = document.querySelector('h2.yt_timestamp_nowplaying');
+
+    if (headingTimestampTitle === null) {
+      document.querySelector('#container > h1.title').insertAdjacentHTML('afterend', `<h2 class="title style-scope ytd-video-primary-info-renderer yt_timestamp_nowplaying">Now Playing: ${timestampObj.current_track}</h2>`);
+    } else if (headingTimestampTitle.textContent !== timeStampObj.current_track) {
+      // Add title to heading
+      headingTimestampTitle.textContent = timestampObj.current_track;
+    }
+
+    //console.log(timestampObj);
+    return timestampObj;
   }
-
-  // Add class to current link
-  timestampObj.current_link.classList.add('selected_yt_timestamp_link');
-
-  // Create heading if it doesn't exist
-  var headingTimestampTitle = document.querySelector('h2.yt_timestamp_nowplaying');
-
-  if (headingTimestampTitle === null) {
-    document.querySelector('#container > h1.title').insertAdjacentHTML('afterend', `<h2 class="title style-scope ytd-video-primary-info-renderer yt_timestamp_nowplaying">Now Playing: ${timestampObj.current_track}</h2>`);
-  } else if (headingTimestampTitle.textContent !== timeStampObj.current_track) {
-    // Add title to heading
-    headingTimestampTitle.textContent = timestampObj.current_track;
-  }
-
-  //console.log(timestampObj);
-  return timestampObj;
 }
 
 function grabTimestampText(ele, descr) {
@@ -147,5 +149,6 @@ function determineTimeSlot(time, tracks) { // 65, ['00:03', '2:38', '4:00'];
 
   // Find the exact timestamp that matches the above var "trackTypes"
   var currentSlot = tracks[tracks.indexOf(trackTypes[0]) - 1]; // Find index of trackTypes, get the array element (index) before this
+
   return currentSlot;
 }
