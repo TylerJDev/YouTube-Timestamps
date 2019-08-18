@@ -13,16 +13,31 @@ Unzip the folder, and load unpacked on Chrome.
 
 ## Running the tests
 
-???
+`npm test`
 
 ## Contributing
 
 Most of the issues are quite simple, mainly to do with parsing or ensuring a timestamp is properly caught.
 If you want to contribute, check out the [Issues](https://github.com/TylerJDev/YouTube_Timestamps/issues) tab, or head into the [Projects](https://github.com/TylerJDev/YouTube_Timestamps/projects) tab to see what's currently on the menu.
 
+### Writing issues
+
+Please stick with this format when writing an issue
+
+Occurrences
+
+Steps to reproduce
+
+Expected result
+
+Actual Result
+
+Comments
+
+
 ## Versioning
 
-???
+0.1.0 - Added Next/Previous track functionality
 
 ## Authors
 

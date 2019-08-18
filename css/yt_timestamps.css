@@ -6,7 +6,7 @@ a.selected_yt_timestamp_link {
   color: white !important;
 }
 
-h2.yt_timestamp_nowplaying {
+h2.yt_timestamp_nowplaying, button.yt_timestamp_controls {
   /* border-radius: 3px;
   padding: 3px !important;
   margin-left: 5px !important; */
@@ -19,4 +19,24 @@ h2.yt_timestamp_nowplaying {
   color: white !important;
   display: inline-block !important;
   padding: 5px !important;
+}
+
+button.yt_timestamp_controls {
+  border: none;
+}
+
+#yt_timestamp_container {
+  display: flex;
+}
+
+button.yt_timestamp_prev {
+  margin-right: 5px;
+}
+
+button.yt_timestamp_next {
+  margin-left: 5px;
+}
+
+button.yt_disabled_btn {
+  display: none !important;
 }

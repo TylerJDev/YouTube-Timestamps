@@ -36,22 +36,6 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
     return timestampObj;
   }
 }
-/* function grabTimestampText(ele, descr) {
-var siblings = [ele.previousSibling, ele.nextSibling]; // [0] = Some random text not related, [1] Proper timestamp text
-var descrText = descr.textContent.split('\n');
-
-  var timestampText = descrText.filter(function(curr, idx) {
-    if (siblings[0] !== null && curr.indexOf(siblings[0].textContent.trim()) >= 0 && curr.indexOf(ele.textContent) >= 0) {
-      return curr;
-    } else if (siblings[1] !== null && curr.indexOf(siblings[1].textContent.trim()) >= 0 && curr.indexOf(ele.textContent) >= 0) {
-      return curr;
-    }
-  });
-
-  if (timestampText.length) {
-    return timestampText[0].replace(ele.textContent, '').trim();
-  }
-} */
 
 function grabTimestampText(ele, descr) {
   var siblings = [ele.previousSibling, ele.nextSibling]; // [0] = Some random text not related, [1] Proper timestamp text

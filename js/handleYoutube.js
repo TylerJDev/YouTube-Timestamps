@@ -66,7 +66,13 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
   var currentTimestamp = timestamps_current.filter(currEle => currEle[0].textContent === determineTimeSlot(currentVideoTime, timestamps_current.map(curr => curr[0].textContent)))
 
   if (currentTimestamp.length) {
-    var timestampObj = {'links_tracks': timestamps_current, 'current_link': currentTimestamp[0][0], 'current_track': currentTimestamp[0][1], 'current_video': window.location.href};
+    var timestampObj = {'links_tracks': timestamps_current, 'current_link': currentTimestamp[0][0], 'current_track': currentTimestamp[0][1], 'current_video': window.location.href, 'current_index': ''};
+
+    timestampObj.links_tracks.forEach(function(x, index) {
+      if (x[1] === timestampObj.current_track) {
+        timestampObj.current_index = index;
+      }
+    });
 
     if (!timestampObj.current_link.classList.contains('selected_yt_timestamp_link')) {
       // Remove previous selected classes
@@ -79,14 +85,41 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
     // Create heading if it doesn't exist
     var headingTimestampTitle = document.querySelector('h2.yt_timestamp_nowplaying');
 
+    // Create Next/Previous buttons
+    var nextPrevButtons = document.querySelector('button.yt_timestamp_controls');
+
+    function changeByControl(currEle) {
+      const currentControlType = this.attributes['data-controltype'].value;
+
+      if (currentControlType === 'next') {
+        document.querySelector('#container .html5-video-container > video.video-stream').currentTime = timestampToSeconds(timeStampObj.links_tracks[timeStampObj.current_index + 1][0].textContent);
+      } else if (currentControlType === 'previous') {
+        document.querySelector('#container .html5-video-container > video.video-stream').currentTime = timestampToSeconds(timeStampObj.links_tracks[timeStampObj.current_index - 1][0].textContent);
+      }
+    }
+
+    var hideBtn = timeStampObj.current_index === 0 ? '.yt_timestamp_prev' : timestampObj.current_index + 1 === timeStampObj.links_tracks.length ? '.yt_timestamp_next' : false;
+
     if (headingTimestampTitle === null) {
-      document.querySelector('#container > h1.title').insertAdjacentHTML('afterend', `<h2 class="title style-scope ytd-video-primary-info-renderer yt_timestamp_nowplaying">Now Playing: ${timestampObj.current_track}</h2>`);
+      // Create a container
+      document.querySelector('#container > h1.title').insertAdjacentHTML('afterend', `<div id="yt_timestamp_container"></div>`);
+
+      document.querySelector('#yt_timestamp_container').insertAdjacentHTML('afterbegin', `<h2 class="title style-scope ytd-video-primary-info-renderer yt_timestamp_nowplaying">Now Playing: ${timestampObj.current_track}</h2>`);
+      if (nextPrevButtons === null) { // Double check
+        document.querySelector('h2.yt_timestamp_nowplaying').insertAdjacentHTML('beforebegin', `<button class="yt_timestamp_controls yt_timestamp_prev" aria-label="Previous Track" data-controltype="previous"> < </button>`);
+        document.querySelector('h2.yt_timestamp_nowplaying').insertAdjacentHTML('afterend', `<button class="yt_timestamp_controls yt_timestamp_next" aria-label="Next Track" data-controltype="next"> > </button>`);
+        Array.from(document.querySelectorAll('button.yt_timestamp_controls'), x => x.addEventListener('click', changeByControl));
+      }
     } else if (headingTimestampTitle.textContent !== timeStampObj.current_track) {
       // Add title to heading
       headingTimestampTitle.textContent = timestampObj.current_track;
     }
 
-    //console.log(timestampObj);
+    Array.from(document.querySelectorAll('button.yt_disabled_btn'), curr => curr.classList.remove('yt_disabled_btn')); // Remove class from existing buttons
+    if (hideBtn !== false) {
+      document.querySelector(hideBtn).classList.add('yt_disabled_btn');
+    }
+
     return timestampObj;
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "youtube_timestamps",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "main": "plugin.js",
   "dependencies": {
     "jest": "^23.6.0"
