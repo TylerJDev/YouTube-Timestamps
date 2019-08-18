@@ -24,15 +24,20 @@ If you want to contribute, check out the [Issues](https://github.com/TylerJDev/Y
 
 Please stick with this format when writing an issue
 
-Occurrences
+**Occurrences**
+- Where this issue happens; provide links or details on how to get to the issue causing page.
 
-Steps to reproduce
+**Steps to reproduce**
+- How to produce this issue; leave steps on how to produce this issue as mentioned.
 
-Expected result
+**Expected result**
+- What should be expected; What is the expected result.
 
-Actual Result
+**Actual Result**
+- What is currently happening; List the end result of the issue here.
 
-Comments
+**Comments**
+- Any comments or more details that wasn't mentioned above.
 
 
 ## Versioning
