@@ -3,6 +3,8 @@ var targetHref = '';
 var timeStampObj = {'links_tracks': []};
 var activeTimeUpdate = false;
 var currentDescr;
+var mutationSet = false;
+var cContent = false;
 
 var targetObserve = new MutationObserver(function(c_mutation) {
   console.log('Change in title!');
@@ -10,17 +12,31 @@ var targetObserve = new MutationObserver(function(c_mutation) {
   var currentHref = window.location.href;
 
   if (currentHref.indexOf('/watch?v=') >= 0) {
+    mutationSet = false, cContent = false;
     var video = document.querySelector('#container .html5-video-container > video.video-stream')
     // var result = findCurrentTimestamps(Math.floor(video.currentTime));
     if (!activeTimeUpdate) {
       activeTimeUpdate = true;
-      video.ontimeupdate = (event) => {
+      // video.ontimeupdate = (event) => {
+      video.addEventListener('timeupdate', timeUpdate);
+
+      function timeUpdate() {
         // Check for current track
+        console.log('!');
         var boolPara = timeStampObj.links_tracks.length ? false : true; // (currentHref !== timeStampObj.current_video) ? true : false; // if not href from previous timestampObj ...
-        var timeObj = findCurrentTimestamps(Math.floor(video.currentTime), boolPara, timeStampObj.links_tracks);
+        var timeObj = findCurrentTimestamps(Math.floor(video.currentTime), boolPara, timeStampObj.links_tracks, cContent);
 
         if (timeObj) {
           timeStampObj = timeObj;
+        } else {
+          var yt_content = document.querySelector('#yt_timestamp_container');
+
+          if (yt_content !== null) {
+            yt_content.parentNode.removeChild(yt_content); // Remove appended content
+          }
+
+          activeTimeUpdate = false;
+          video.removeEventListener('timeupdate', timeUpdate);
         }
       };
     }
@@ -34,9 +50,15 @@ targetObserve.observe(targetEle, {
   childList: true // # DEV-NOTE Possible replace this with characterData && characterDataOldValue
 });
 
-function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, timestamps_current=[]) {
+function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, timestamps_current=[], commentContent=false, ) {
   // Check if any timestamps currently exist
   var descriptionContent = document.querySelector('#description > .content');
+
+  if (commentContent !== false) {
+    descriptionContent = commentContent;
+    console.log(commentContent);
+  }
+
 
   if (descriptionContent.textContent !== currentDescr) {
     searchForTimestamps = true;
@@ -46,7 +68,7 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
   }
 
   if (!descriptionContent.querySelectorAll('a').length) {
-    return false; // If no links (timestamps) are found
+    return commentContent === false ? checkCommentsForTimestamps() : false; // If no links (timestamps) are found in the description
   }
 
   var currentLinks = Array.from(descriptionContent.querySelectorAll('a'));
@@ -67,6 +89,10 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
 
   if (currentTimestamp.length) {
     var timestampObj = {'links_tracks': timestamps_current, 'current_link': currentTimestamp[0][0], 'current_track': currentTimestamp[0][1], 'current_video': window.location.href, 'current_index': ''};
+
+    if (isNaN(timestampToSeconds(timestampObj.links_tracks[0][0].textContent.trim()))) { // If the first element in links_track text !== number
+      return false;
+    }
 
     timestampObj.links_tracks.forEach(function(x, index) {
       if (x[1] === timestampObj.current_track) {
@@ -121,6 +147,8 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
     }
 
     return timestampObj;
+  } else {
+    return commentContent === false ? checkCommentsForTimestamps() : false;
   }
 }
 
@@ -185,3 +213,38 @@ function determineTimeSlot(time, tracks) { // 65, ['00:03', '2:38', '4:00'];
 
   return currentSlot;
 }
+
+function checkCommentsForTimestamps() {
+  var titleObserve = new MutationObserver(function(curr_mutation) {
+    if (document.querySelector('ytd-comments#comments #contents').childElementCount > 0) {
+      var setupCommentCheck = new Promise((resolve, reject) => {
+        setTimeout(function() {
+          resolve(document.querySelector('ytd-comments#comments #contents').children);
+        }, 1500);
+      });
+
+      setupCommentCheck.then((result) => {
+        var toArray = Array.from(result);
+        for (var currNode in toArray) {
+          if (findCurrentTimestamps(Math.floor(document.querySelector('#container .html5-video-container > video.video-stream').currentTime), true, [], toArray[currNode]) !== false) {
+            cContent = toArray[currNode];
+            break;
+          }
+        }
+      });
+
+      titleObserve.disconnect();
+    }
+  });
+
+  if (document.querySelector('ytd-comments#comments #contents') !== null && document.querySelector('ytd-comments#comments #contents').childElementCount === 0 && mutationSet === false) {
+    titleObserve.observe(document.querySelector('ytd-comments#comments #contents'), {
+      childList: true // # DEV-NOTE Possible replace this with characterData && characterDataOldValue
+    });
+    mutationSet = true;
+  } else {
+    return false;
+  }
+}
+
+// checkCommentsForTimestamps();

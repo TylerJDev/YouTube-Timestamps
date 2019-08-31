@@ -42,6 +42,8 @@ Please stick with this format when writing an issue
 
 ## Versioning
 
+0.1.1 - Fixed issue #7 regarding timestamp HTML being displayed on videos without timestamps
+
 0.1.0 - Added Next/Previous track functionality
 
 ## Authors
