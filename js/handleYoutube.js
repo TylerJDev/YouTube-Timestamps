@@ -132,9 +132,20 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
 
       document.querySelector('#yt_timestamp_container').insertAdjacentHTML('afterbegin', `<h2 class="title style-scope ytd-video-primary-info-renderer yt_timestamp_nowplaying">Now Playing: ${timestampObj.current_track}</h2>`);
       if (nextPrevButtons === null) { // Double check
-        document.querySelector('h2.yt_timestamp_nowplaying').insertAdjacentHTML('beforebegin', `<button class="yt_timestamp_controls yt_timestamp_prev" aria-label="Previous Track" data-controltype="previous"> < </button>`);
-        document.querySelector('h2.yt_timestamp_nowplaying').insertAdjacentHTML('afterend', `<button class="yt_timestamp_controls yt_timestamp_next" aria-label="Next Track" data-controltype="next"> > </button>`);
+        document.querySelector('h2.yt_timestamp_nowplaying').insertAdjacentHTML('beforebegin', `<button class="yt_timestamp_controls yt_timestamp_prev" aria-label="Previous Track" data-controltype="previous"> &#9664; </button>`);
+        document.querySelector('h2.yt_timestamp_nowplaying').insertAdjacentHTML('afterend', `<button class="yt_timestamp_controls yt_timestamp_next" aria-label="Next Track" data-controltype="next"> &#9658; </button>`);
         Array.from(document.querySelectorAll('button.yt_timestamp_controls'), x => x.addEventListener('click', changeByControl));
+
+        // Reuse next/prev buttons
+        var nextPrev = [document.querySelector('.ytp-left-controls .ytp-next-button svg'), document.querySelector('.ytp-left-controls .ytp-prev-button svg')];
+        if (nextPrev.indexOf(null) === -1) {
+          var nextPrevElements = [document.querySelector('.yt_timestamp_next'), document.querySelector('.yt_timestamp_prev')];
+          nextPrevElements.forEach(function(curr, index, arr) {
+            curr.textContent = '';
+            curr.insertAdjacentHTML('afterbegin', nextPrev[index].outerHTML);
+          });
+        }
+
       }
     } else if (headingTimestampTitle.textContent !== timeStampObj.current_track) {
       // Add title to heading
@@ -175,7 +186,8 @@ function grabTimestampText(ele, descr) {
   });
 
   if (timestampText.length) {
-    return timestampText[0].replace(ele.textContent, '').trim();
+    console.log(timestampText[0].replace(ele.textContent, '').trim());
+    return timestampText[0].replace(ele.textContent, '').trim().replace(/[()\[\]-]/gi, '');
   }
 }
 

@@ -1,5 +1,5 @@
 a.selected_yt_timestamp_link {
-  background-color: #777;
+  background-color: #575757; /* #777 */;
   border-radius: 16px;
   padding-right: 6px;
   padding-left: 6px;
@@ -15,14 +15,17 @@ h2.yt_timestamp_nowplaying, button.yt_timestamp_controls {
   color: white !important;
   display: inline-block !important; */
   border-radius: 12px !important;
-  background-color: #777 !important;
+  background-color: #575757 !important; /* #777 !important; */
   color: white !important;
   display: inline-block !important;
   padding: 5px !important;
+
 }
 
 button.yt_timestamp_controls {
   border: none;
+  width: 35px;
+  height: 35px;
 }
 
 #yt_timestamp_container {
