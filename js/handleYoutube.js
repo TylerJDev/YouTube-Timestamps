@@ -187,7 +187,7 @@ function grabTimestampText(ele, descr) {
 
   if (timestampText.length) {
     console.log(timestampText[0].replace(ele.textContent, '').trim());
-    return timestampText[0].replace(ele.textContent, '').trim().replace(/[()\[\]-]/gi, '');
+    return timestampText[0].replace(ele.textContent, '').trim().replace(/[()\[\]-] +/gi, '');
   }
 }
 
@@ -260,3 +260,5 @@ function checkCommentsForTimestamps() {
 }
 
 // checkCommentsForTimestamps();
+
+module.exports = {timestampToSeconds, determineTimeSlot, findCurrentTimestamps}
