@@ -22,7 +22,6 @@ var targetObserve = new MutationObserver(function(c_mutation) {
 
       function timeUpdate() {
         // Check for current track
-        console.log('!');
         var boolPara = timeStampObj.links_tracks.length ? false : true; // (currentHref !== timeStampObj.current_video) ? true : false; // if not href from previous timestampObj ...
         var timeObj = findCurrentTimestamps(Math.floor(video.currentTime), boolPara, timeStampObj.links_tracks, cContent);
 
@@ -56,7 +55,6 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
 
   if (commentContent !== false) {
     descriptionContent = commentContent;
-    console.log(commentContent);
   }
 
 
@@ -186,7 +184,6 @@ function grabTimestampText(ele, descr) {
   });
 
   if (timestampText.length) {
-    console.log(timestampText[0].replace(ele.textContent, '').trim());
     return timestampText[0].replace(ele.textContent, '').trim().replace(/[()\[\]-] +/gi, '');
   }
 }

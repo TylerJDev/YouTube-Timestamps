@@ -52,4 +52,4 @@ Plugin was made by Tyler Jones, any contributors will be listed here.
 
 ## Acknowledgments
 
-I'd like to thank my friend [Aaron](https://github.com/AaronChapman) for helping me stay committed to this plugin
+I'd like to thank my friend [Aaron](https://github.com/AaronChapman) for helping me stay committed to this plugin.
