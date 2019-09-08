@@ -5,6 +5,7 @@ var activeTimeUpdate = false;
 var currentDescr;
 var mutationSet = false;
 var cContent = false;
+var withinComments = '';
 
 var targetObserve = new MutationObserver(function(c_mutation) {
   console.log('Change in title!');
@@ -12,9 +13,10 @@ var targetObserve = new MutationObserver(function(c_mutation) {
   var currentHref = window.location.href;
 
   if (currentHref.indexOf('/watch?v=') >= 0) {
-    mutationSet = false, cContent = false;
+    mutationSet = false, cContent = false, withinComments = '';
     var video = document.querySelector('#container .html5-video-container > video.video-stream')
     // var result = findCurrentTimestamps(Math.floor(video.currentTime));
+    console.log(activeTimeUpdate);
     if (!activeTimeUpdate) {
       activeTimeUpdate = true;
       // video.ontimeupdate = (event) => {
@@ -34,8 +36,10 @@ var targetObserve = new MutationObserver(function(c_mutation) {
             yt_content.parentNode.removeChild(yt_content); // Remove appended content
           }
 
-          activeTimeUpdate = false;
-          video.removeEventListener('timeupdate', timeUpdate);
+          if (withinComments === false) {
+            activeTimeUpdate = false;
+            video.removeEventListener('timeupdate', timeUpdate);
+          }
         }
       };
     }
@@ -86,6 +90,10 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
   var currentTimestamp = timestamps_current.filter(currEle => currEle[0].textContent === determineTimeSlot(currentVideoTime, timestamps_current.map(curr => curr[0].textContent)))
 
   if (currentTimestamp.length) {
+    if (commentContent !== false && timestamps_current.length <= 4) { // If searching through comment(s) and links found is less or equal to 4
+      return false;
+    }
+
     var timestampObj = {'links_tracks': timestamps_current, 'current_link': currentTimestamp[0][0], 'current_track': currentTimestamp[0][1], 'current_video': window.location.href, 'current_index': ''};
 
     if (isNaN(timestampToSeconds(timestampObj.links_tracks[0][0].textContent.trim()))) { // If the first element in links_track text !== number
@@ -116,6 +124,7 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
       const currentControlType = this.attributes['data-controltype'].value;
 
       if (currentControlType === 'next') {
+        console.log(timestampObj)
         document.querySelector('#container .html5-video-container > video.video-stream').currentTime = timestampToSeconds(timeStampObj.links_tracks[timeStampObj.current_index + 1][0].textContent);
       } else if (currentControlType === 'previous') {
         document.querySelector('#container .html5-video-container > video.video-stream').currentTime = timestampToSeconds(timeStampObj.links_tracks[timeStampObj.current_index - 1][0].textContent);
@@ -239,6 +248,11 @@ function checkCommentsForTimestamps() {
             cContent = toArray[currNode];
             break;
           }
+        }
+
+        if (cContent === false) { // If no timestamps are found within the comments
+          console.log('None here!');
+          withinComments = false;
         }
       });
 
