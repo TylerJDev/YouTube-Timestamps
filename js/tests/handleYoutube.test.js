@@ -1,4 +1,4 @@
-const mock = require('./mocks/MutationObserver.mock'); // @https://jestjs.io/docs/en/manual-mocks
+const mock = require('../tests/mocks/MutationObserver.mock'); // @https://jestjs.io/docs/en/manual-mocks
 const c_timestamps = require('../handleYoutube.js');
 
 describe('Tesitng currentTimestamp module', () => {
