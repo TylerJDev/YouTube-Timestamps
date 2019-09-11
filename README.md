@@ -41,6 +41,7 @@ Please stick with this format when writing an issue
 
 
 ## Versioning
+0.1.3 Fixed issue #6, improved file organization
 
 0.1.2 - Fixed issue #10 as well as an issue that caused timestamps grabbed from comments not to update
 
