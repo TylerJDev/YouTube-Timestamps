@@ -79,6 +79,8 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
     // Grab the corresponding timestamp text
     currentLinks.forEach(function(curr, index) {
       var val = timestampToSeconds(curr.textContent);
+
+      debugger;
       if (val >= 0 && typeof val === 'number') {
         curr.classList.add('yt_timestamp_link'); // Add class to proper timestamp link
         timestamps_current.push([curr, grabTimestampText(curr, descriptionContent)]); // timestampToSeconds returns an integer
@@ -173,11 +175,14 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
 function grabTimestampText(ele, descr) {
   var siblings = [ele.previousSibling, ele.nextSibling]; // [0] = Some random text not related, [1] Proper timestamp text
   var descrText = descr.textContent.split('\n');
+  var defTitle = '';
+
 
   var timestampText = descrText.filter(function(curr, idx) {
     if (siblings[0] !== null && curr.indexOf(siblings[0].textContent.trim()) >= 0 && curr.indexOf(ele.textContent) >= 0) {
       return curr;
-    } else if (siblings[1] !== null && curr.indexOf(siblings[1].textContent.trim()) >= 0 && curr.indexOf(ele.textContent) >= 0) {
+    } else if (siblings[1] !== null && curr.indexOf(siblings[1].textContent.trim().split('\n')[0]) >= 0 && curr.indexOf(ele.textContent) >= 0) {
+      defTitle = curr;
       return curr;
     } else if (siblings[0] !== null &&
       (siblings[0].textContent.split('\n').length > 1 && curr.indexOf(siblings[0].textContent.trim().split('\n').pop()) >= 0))
@@ -192,8 +197,11 @@ function grabTimestampText(ele, descr) {
     }
   });
 
-  if (timestampText.length) {
+  console.log(timestampText);
+  if (timestampText.length === 1) {
     return timestampText[0].replace(ele.textContent, '').trim().replace(/[()\[\]-] +/gi, '');
+  } else {
+    return defTitle;
   }
 }
 
