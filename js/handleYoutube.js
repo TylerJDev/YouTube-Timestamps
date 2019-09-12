@@ -79,8 +79,6 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
     // Grab the corresponding timestamp text
     currentLinks.forEach(function(curr, index) {
       var val = timestampToSeconds(curr.textContent);
-
-      debugger;
       if (val >= 0 && typeof val === 'number') {
         curr.classList.add('yt_timestamp_link'); // Add class to proper timestamp link
         timestamps_current.push([curr, grabTimestampText(curr, descriptionContent)]); // timestampToSeconds returns an integer
@@ -109,12 +107,16 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
     });
 
     if (!timestampObj.current_link.classList.contains('selected_yt_timestamp_link')) {
+      // Remove aria-describedby
+      Array.from(document.querySelectorAll('a.selected_yt_timestamp_link'), curr => curr.removeAttribute('aria-describedby'));
+
       // Remove previous selected classes
       Array.from(document.querySelectorAll('a.selected_yt_timestamp_link'), curr => curr.classList.remove('selected_yt_timestamp_link'));
     }
-
     // Add class to current link
     timestampObj.current_link.classList.add('selected_yt_timestamp_link');
+
+    document.querySelector('a.selected_yt_timestamp_link').setAttribute('aria-describedby', 'yt_timestamp_title_playing');
 
     // Create heading if it doesn't exist
     var headingTimestampTitle = document.querySelector('h2.yt_timestamp_nowplaying');
@@ -126,7 +128,6 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
       const currentControlType = this.attributes['data-controltype'].value;
 
       if (currentControlType === 'next') {
-        console.log(timestampObj)
         document.querySelector('#container .html5-video-container > video.video-stream').currentTime = timestampToSeconds(timeStampObj.links_tracks[timeStampObj.current_index + 1][0].textContent);
       } else if (currentControlType === 'previous') {
         document.querySelector('#container .html5-video-container > video.video-stream').currentTime = timestampToSeconds(timeStampObj.links_tracks[timeStampObj.current_index - 1][0].textContent);
@@ -139,7 +140,7 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
       // Create a container
       document.querySelector('#container > h1.title').insertAdjacentHTML('afterend', `<div id="yt_timestamp_container"></div>`);
 
-      document.querySelector('#yt_timestamp_container').insertAdjacentHTML('afterbegin', `<h2 class="title style-scope ytd-video-primary-info-renderer yt_timestamp_nowplaying">Now Playing: ${timestampObj.current_track}</h2>`);
+      document.querySelector('#yt_timestamp_container').insertAdjacentHTML('afterbegin', `<h2 id="yt_timestamp_title_playing" class="title style-scope ytd-video-primary-info-renderer yt_timestamp_nowplaying" aria-live="polite" role="status">Now Playing: ${timestampObj.current_track}</h2>`);
       if (nextPrevButtons === null) { // Double check
         document.querySelector('h2.yt_timestamp_nowplaying').insertAdjacentHTML('beforebegin', `<button class="yt_timestamp_controls yt_timestamp_prev" aria-label="Previous Track" data-controltype="previous"> &#9664; </button>`);
         document.querySelector('h2.yt_timestamp_nowplaying').insertAdjacentHTML('afterend', `<button class="yt_timestamp_controls yt_timestamp_next" aria-label="Next Track" data-controltype="next"> &#9658; </button>`);
@@ -197,8 +198,7 @@ function grabTimestampText(ele, descr) {
     }
   });
 
-  console.log(timestampText);
-  if (timestampText.length === 1) {
+  if (timestampText.length <= 5) {
     return timestampText[0].replace(ele.textContent, '').trim().replace(/[()\[\]-] +/gi, '');
   } else {
     return defTitle;
@@ -278,6 +278,8 @@ function checkCommentsForTimestamps() {
   }
 }
 
-// checkCommentsForTimestamps();
-
-module.exports = {timestampToSeconds, determineTimeSlot, findCurrentTimestamps}
+try {
+  module.exports = {timestampToSeconds, determineTimeSlot, findCurrentTimestamps}
+} catch(ReferenceError) {
+  console.log('temp');
+}
