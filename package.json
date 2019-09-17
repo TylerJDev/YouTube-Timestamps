@@ -6,7 +6,8 @@
     "jest": "^23.6.0"
   },
   "devDependencies": {
-    "eslint": "^5.15.3"
+    "eslint": "^6.4.0",
+    "eslint-config-google": "^0.14.0"
   },
   "jest": {
     "testURL": "https://www.something.com/text.html"
