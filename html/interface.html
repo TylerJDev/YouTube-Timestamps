@@ -1,0 +1,153 @@
+<html>
+<head>
+  <!-- <link href="interface_styles.css" rel="stylesheet"> -->
+  <title>Youtube Timestamps</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+
+
+  <style type="text/css">
+    body {
+      width: 300px;
+      margin: 0px !important;
+      background-color: #121212;
+      color: white;
+      font-family: 'Montserrat', "Segoe UI";
+    }
+
+    #tabs {
+      height: 40px;
+      width: 100%;
+      font-size: 0.5rem;
+      background-color: #1e1e1e;
+      margin-top: 10px;
+    }
+
+    #tab_1 {
+      width: 100%;
+      text-align: center;
+    }
+
+    .tab_pill {
+      display: inline-block;
+      width: 50px;
+    }
+
+    #main_body {
+      border-radius: 10px;
+      margin: 15px;
+      padding: 10px;
+      background-color: #1e1e1e;
+    }
+
+    .container_heading {
+      font-size: 1.2rem;
+    }
+
+    #container label {
+      font-size: 0.9rem;
+    }
+
+    #container #ui_style label ~ div {
+      display: inline;
+      float: right;
+    }
+
+    #ui_settings .form-container {
+      display: block;
+    }
+
+    #ui_settings {
+      margin-top: 35px;
+    }
+
+    #container input {
+      background-color: #423d47;
+      border: none;
+      border-radius: 3px;
+      padding: 8px;
+      color: white;
+    }
+
+    #container input::placeholder {
+      text-align: center;
+      color: #FFFFFF;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="tabs">
+      <div id="tab_1" class="tab_pill">
+        <h2>Settings</h2>
+      </div>
+    </div>
+
+    <div id="main_body">
+      <div id="ui_style">
+        <h1 class="container_heading">UI Style</h1>
+        <label for="color_input">Color</label>
+          <div>
+            <!-- <span>Pick a color, i.e, (Red, Blue)</span> -->
+            <input type="text" id="color_input" placeholder="HEX & RGB Supported">
+          </div>
+      </div>
+
+      <div id="tier_setings">
+      <div id="ui_settings">
+        <form>
+          <fieldset>
+            <legend class="container_heading">UI Settings</legend>
+            <div class="form-container">
+              <input type="checkbox" id="toggle_heading">
+              <label for="toggle_heading">Enable Heading</label>
+
+            </div>
+
+            <div class="form-container">
+              <input type="checkbox" id="disable_background">
+              <label for="disable_background">Enable Background</label>
+
+            </div>
+          </fieldset>
+        </form>
+      </div>
+
+      <div id="ui_placement">
+        <form>
+          <fieldset>
+            <legend class="container_heading">UI Placement</legend>
+
+            <div class="form-container">
+              <input type="radio" id="below_title" class="yt_radio">
+              <label for="below_title">Below Title (default)</label>
+
+            </div>
+
+            <div class="form-container">
+              <input type="radio" id="above_title" class="yt_radio">
+              <label for="above_title">Above Title</label>
+
+            </div>
+
+            <!-- <div class="form-container">
+              <input type="radio" id="right_panel" class="yt_radio">
+              <label for="right_panel">Right Panel</label>
+
+            </div> -->
+
+            <!-- <div class="form-container">
+              <input type="radio" id="on_video" class="yt_radio">
+              <label for="on_video">On Video</label>
+
+            </div> -->
+          </fieldset>
+        </form>
+      </div>
+
+    </div>
+    </div>
+  </div>
+  <script src="../js/interface.js"></script>
+</body>
+</html>
