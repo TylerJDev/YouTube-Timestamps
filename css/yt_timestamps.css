@@ -1,4 +1,4 @@
-a.selected_yt_timestamp_link {
+.selected_yt_timestamp_link {
   background-color: #575757; /* #777 */;
   border-radius: 16px;
   padding-right: 6px;
@@ -6,7 +6,7 @@ a.selected_yt_timestamp_link {
   color: white !important;
 }
 
-h2.yt_timestamp_nowplaying, button.yt_timestamp_controls {
+.yt_timestamp_nowplaying, .yt_timestamp_controls {
   /* border-radius: 3px;
   padding: 3px !important;
   margin-left: 5px !important; */
@@ -15,9 +15,9 @@ h2.yt_timestamp_nowplaying, button.yt_timestamp_controls {
   color: white !important;
   display: inline-block !important; */
   border-radius: 12px !important;
-  background-color: #575757 !important; /* #777 !important; */
+  background-color: #575757; /* #777 !important; */
   color: white !important;
-  display: inline-block !important;
+  display: inline-block;
   padding: 5px !important;
 
 }
@@ -43,3 +43,25 @@ button.yt_timestamp_next {
 button.yt_disabled_btn {
   display: none !important;
 }
+
+.yt_timestamps_hide {
+  display: none !important;
+}
+
+h2.yt_timestamps_bg_hide, button.yt_timestamps_bg_hide {
+  background-color: transparent !important;
+  color: black !important;
+}
+
+a.yt_timestamps_bg_hide.selected_yt_timestamp_link  {
+  background-color: transparent !important;
+  color: rgb(6, 95, 212) !important;
+}
+
+.yt_timestamps_bg_hide svg path {
+  fill: black !important;
+}
+
+/* .yt_timestamps_right {
+  float: right !important;
+} */

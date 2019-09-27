@@ -2,7 +2,7 @@
   "name": "YouTube Timestamps 2.0",
   "version": "0.1.1",
   "description": "Gets collection of timestamps from video description or comments.",
-  "permissions": ["*://*.youtube.com/*"],
+  "permissions": ["*://*.youtube.com/*", "storage"],
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],
@@ -11,5 +11,8 @@
       "run_at": "document_idle"
     }
   ],
+  "browser_action": {
+    "default_popup": "html/interface.html"
+  },
   "manifest_version": 2
 }

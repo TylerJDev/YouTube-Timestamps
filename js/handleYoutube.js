@@ -5,6 +5,7 @@ let currentDescr;
 let mutationSet = false;
 let cContent = false;
 let withinComments = '';
+let settings = {'toggle_heading': 'true', 'disable_background': 'true', 'below_title': 'true', 'on_video': 'false'};
 
 const targetObserve = new MutationObserver(function(cMutation) {
   console.log('Change in title!');
@@ -121,8 +122,14 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
       // Remove previous selected classes
       Array.from(document.querySelectorAll('a.selected_yt_timestamp_link'), (curr) => curr.classList.remove('selected_yt_timestamp_link'));
     }
+
+    const hideBg = settings.disable_background === true ? '' : 'yt_timestamps_bg_hide';
+
     // Add class to current link
     timestampObj.current_link.classList.add('selected_yt_timestamp_link');
+    if (hideBg.length) {
+      timestampObj.current_link.classList.add(hideBg);
+    }
 
     if (document.querySelector('a.selected_yt_timestamp_link') !== null) {
       document.querySelector('a.selected_yt_timestamp_link').setAttribute('aria-describedby', 'yt_timestamp_title_playing');
@@ -147,13 +154,17 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
     const hideBtn = timeStampObj.current_index === 0 ? '.yt_timestamp_prev' : timestampObj.current_index + 1 === timeStampObj.links_tracks.length ? '.yt_timestamp_next' : false;
 
     if (headingTimestampTitle === null) {
-      // Create a container
-      document.querySelector('#container > h1.title').insertAdjacentHTML('afterend', `<div id="yt_timestamp_container"></div>`);
+      const hideHeading = settings.toggle_heading === true ? '' : 'yt_timestamps_hide';
+      const containerPosition = settings.below_title === true ? 'afterend' : settings.above_title === true ? 'beforebegin' : 'afterend';
+      console.log(settings.toggle_heading, settings, hideHeading);
 
-      document.querySelector('#yt_timestamp_container').insertAdjacentHTML('afterbegin', `<h2 id="yt_timestamp_title_playing" class="title style-scope ytd-video-primary-info-renderer yt_timestamp_nowplaying" aria-live="polite" role="status">Now Playing: ${timestampObj.current_track}</h2>`);
+      // Create a container
+      document.querySelector('#container > h1.title').insertAdjacentHTML(containerPosition, `<div id="yt_timestamp_container"></div>`);
+
+      document.querySelector('#yt_timestamp_container').insertAdjacentHTML('afterbegin', `<h2 id="yt_timestamp_title_playing" class="${hideHeading + ' ' + hideBg} title style-scope ytd-video-primary-info-renderer yt_timestamp_nowplaying" aria-live="polite" role="status">Now Playing: ${timestampObj.current_track}</h2>`);
       if (nextPrevButtons === null) { // Double check
-        document.querySelector('h2.yt_timestamp_nowplaying').insertAdjacentHTML('beforebegin', `<button class="yt_timestamp_controls yt_timestamp_prev" aria-label="Previous Track" data-controltype="previous"> &#9664; </button>`);
-        document.querySelector('h2.yt_timestamp_nowplaying').insertAdjacentHTML('afterend', `<button class="yt_timestamp_controls yt_timestamp_next" aria-label="Next Track" data-controltype="next"> &#9658; </button>`);
+        document.querySelector('h2.yt_timestamp_nowplaying').insertAdjacentHTML('beforebegin', `<button class="${hideBg} yt_timestamp_controls yt_timestamp_prev" aria-label="Previous Track" data-controltype="previous"> &#9664; </button>`);
+        document.querySelector('h2.yt_timestamp_nowplaying').insertAdjacentHTML('afterend', `<button class="${hideBg} yt_timestamp_controls yt_timestamp_next" aria-label="Next Track" data-controltype="next"> &#9658; </button>`);
         Array.from(document.querySelectorAll('button.yt_timestamp_controls'), (x) => x.addEventListener('click', changeByControl));
 
         // Reuse next/prev buttons
@@ -171,6 +182,8 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
       headingTimestampTitle.textContent = timestampObj.current_track;
     }
 
+    // Adjust colors based on current settings
+    Array.from(document.querySelector('#yt_timestamp_container').children, currElem => currElem.setAttribute('style', 'background-color: ' + settings.color + ' !important'));
     Array.from(document.querySelectorAll('button.yt_disabled_btn'), (curr) => curr.classList.remove('yt_disabled_btn')); // Remove class from existing buttons
     if (hideBtn !== false) {
       document.querySelector(hideBtn).classList.add('yt_disabled_btn');
@@ -283,6 +296,54 @@ function checkCommentsForTimestamps() {
     return false;
   }
 }
+
+function runSettings(currSettings) {
+  // What changed
+  var changedSetting = Object.keys(currSettings.plugin_settings.oldValue).filter(function(curr, idx) {
+    if (currSettings.plugin_settings.oldValue[curr] !== currSettings.plugin_settings.newValue[curr]) {
+      return curr;
+    }
+  });
+
+  if (changedSetting.join(' ') === 'toggle_heading') {
+    settings.toggle_heading === true ?
+    document.querySelector('#yt_timestamp_title_playing').classList.remove('yt_timestamps_hide') :
+    document.querySelector('#yt_timestamp_title_playing').classList.add('yt_timestamps_hide');
+  }
+
+  if (changedSetting.join(' ') === 'disable_background') {
+    settings.disable_background === true ?
+    Array.from(document.querySelectorAll('h2.yt_timestamp_nowplaying, button.yt_timestamp_controls, a.selected_yt_timestamp_link'), x => x.classList.remove('yt_timestamps_bg_hide')) :
+    Array.from(document.querySelectorAll('h2.yt_timestamp_nowplaying, button.yt_timestamp_controls, a.selected_yt_timestamp_link'), x => x.classList.add('yt_timestamps_bg_hide'));
+  }
+
+  if (changedSetting.join(' ') === 'above_title below_title') {
+    if (settings.below_title) {
+      document.querySelector('#info #container').insertBefore(document.querySelector('#yt_timestamp_container'), document.querySelector('#container > h1.title').nextSibling);
+    } else if (settings.above_title) {
+      document.querySelector('#info #container').insertBefore(document.querySelector('#yt_timestamp_container'), document.querySelector('#container > h1.title'));
+    }
+  }
+
+  if (changedSetting.join(' ') === 'color') {
+    // Check if current color !== settings.color
+    Array.from(document.querySelector('#yt_timestamp_container').children, currElem => currElem.setAttribute('style', 'background-color: ' + settings.color + ' !important'));
+  }
+}
+
+chrome.storage.sync.get(['plugin_settings'], function(result) {
+  if (!Object.keys(result).length) {
+    console.log('Run default settings');
+  } else {
+    console.log('Run settings:', result);
+    settings = result.plugin_settings;
+  }
+});
+
+chrome.storage.onChanged.addListener(function(changes) {
+  settings = changes.plugin_settings.newValue;
+  runSettings(changes);
+});
 
 try {
   module.exports = {

@@ -1,6 +1,6 @@
 {
   "name": "youtube_timestamps",
-  "version": "0.1.0",
+  "version": "0.2.5",
   "main": "plugin.js",
   "dependencies": {
     "jest": "^23.6.0"
@@ -13,7 +13,8 @@
     "testURL": "https://www.something.com/text.html"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "./node_modules/.bin/eslint"
   },
   "author": "",
   "license": "ISC",

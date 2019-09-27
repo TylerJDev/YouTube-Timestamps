@@ -41,6 +41,8 @@ Please stick with this format when writing an issue
 
 
 ## Versioning
+0.2.5 Added interface
+
 0.1.5 More cleaning
 
 0.1.4 Multiple bug fixes, cleaned up code, added more a11y

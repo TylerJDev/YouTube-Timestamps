@@ -3,3 +3,18 @@ global.MutationObserver = jest.fn().mockImplementation(query => {
     observe: jest.fn()
   };
 });
+
+global.chrome = {
+  storage: {
+    sync: {
+      get(x, y) {
+        return true;
+      }
+    },
+    onChanged: {
+      addListener(x) {
+        return true;
+      }
+    }
+  }
+}
