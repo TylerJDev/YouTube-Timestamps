@@ -15,7 +15,6 @@ const targetObserve = new MutationObserver(function(cMutation) {
   if (currentHref.indexOf('/watch?v=') >= 0) {
     mutationSet = false, cContent = false, withinComments = '';
     const video = document.querySelector('#container .html5-video-container > video.video-stream');
-    console.log(activeTimeUpdate);
 
     if (!activeTimeUpdate) {
       activeTimeUpdate = true;
@@ -36,6 +35,7 @@ const targetObserve = new MutationObserver(function(cMutation) {
             ytContent.parentNode.removeChild(ytContent); // Remove appended content
           }
 
+          // console.log(withinComments);
           if (withinComments === false) {
             activeTimeUpdate = false;
             video.removeEventListener('timeupdate', timeUpdate);
@@ -56,6 +56,7 @@ targetObserve.observe(targetEle, {
 function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, timestampsCurrent=[], commentContent=false, ) {
   // Check if any timestamps currently exist
   let descriptionContent = document.querySelector('#description > .content');
+  let descriptionContentFrag = document.createDocumentFragment().appendChild(descriptionContent.cloneNode(true));
 
   if (commentContent !== false) {
     descriptionContent = commentContent;
@@ -75,12 +76,22 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
   const currentLinks = Array.from(descriptionContent.querySelectorAll('a'));
   // var timestampsCurrent = [];
   if (searchForTimestamps === true) {
+
+    //console.log(descriptionContentFrag.querySelectorAll('a'));
     // Grab the corresponding timestamp text
     currentLinks.forEach(function(curr, index) {
       const val = timestampToSeconds(curr.textContent);
       if (val >= 0 && typeof val === 'number') {
         curr.classList.add('yt_timestamp_link'); // Add class to proper timestamp link
-        timestampsCurrent.push([curr, grabTimestampText(curr, descriptionContent)]); // timestampToSeconds returns an integer
+
+        // Check if link is not unique
+        //console.log(curr);
+        let this_href = curr.attributes.href.value;
+        let duplicateLinks = descriptionContent.querySelectorAll(`a[href="${this_href}"]`); // descriptionContentFrag.querySelectorAll(`a[href="${this_href}"]`);
+
+        //if (duplicateLinks.length === 1 && duplicateLinks[duplicateLinks.length - 1] === curr) {
+          timestampsCurrent.push([curr, grabTimestampText(curr, descriptionContent, this_href, duplicateLinks)]); // timestampToSeconds returns an integer
+        //}
       }
     });
   }
@@ -89,7 +100,8 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
   let currentTimestamp = timestampsCurrent.filter((currEle) => currEle[0].textContent === determineTimeSlot(currentVideoTime, timestampsCurrent.map((curr) => curr[0].textContent)));
 
   if (currentTimestamp.length === 2) {
-    console.warn('2 non-unique timestamps found!');
+    //console.warn('2 non-unique timestamps found!');
+    //console.log(currentTimestamp);
     currentTimestamp = [currentTimestamp[1]];
   }
 
@@ -195,13 +207,16 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
   }
 }
 
-function grabTimestampText(ele, descr) {
+function grabTimestampText(ele, descr, href, nonUnique) {
   const siblings = [ele.previousSibling, ele.nextSibling]; // [0] = Some random text not related, [1] Proper timestamp text
   const descrText = descr.textContent.split('\n');
   let defTitle = '';
 
   const timestampText = descrText.filter(function(curr, idx) {
-    if (siblings[0] !== null && curr.indexOf(siblings[0].textContent.trim()) >= 0 && curr.indexOf(ele.textContent) >= 0) {
+
+
+    // @ If previous sibling exists, and this current line within the description has the previous sibling's text content as well as timestamp which was passed in this function
+    if (siblings[0] !== null && curr.indexOf(siblings[0].textContent.trim()) >= 0 && curr.indexOf(ele.textContent) >= 0 && ele === nonUnique[nonUnique.length - 1]) {
       return curr;
     } else if (siblings[1] !== null && curr.indexOf(siblings[1].textContent.trim().split('\n')[0]) >= 0 && curr.indexOf(ele.textContent) >= 0) {
       defTitle = curr;
@@ -213,9 +228,15 @@ function grabTimestampText(ele, descr) {
       (siblings[1].textContent.split('\n').length > 1 && curr.indexOf(siblings[1].textContent.trim().split('\n').pop()) >= 0)) {
       return siblings[1].textContent.split('\n').pop();
     } else if (curr.indexOf(ele.textContent) >= 0 && curr.replace(ele.textContent).trim().length) {
+      //console.log('option 5');
       return curr.replace(ele.textContent).trim();
     }
   });
+
+  if (nonUnique.length > 1 && ele === nonUnique[nonUnique.length - 1] && timestampText.length === 2) {
+    timestampText.shift();
+    //console.log(timestampText);
+  }
 
   if (timestampText.length <= 5) {
     return timestampText[0].replace(ele.textContent, '').trim().replace(/[()\[\]-] +/gi, '');
@@ -255,6 +276,8 @@ function determineTimeSlot(time, tracks) { // 65, ['00:03', '2:38', '4:00'];
 
   // Find the exact timestamp that matches the above var "trackTypes"
   const currentSlot = tracks[tracks.indexOf(trackTypes[0]) - 1]; // Find index of trackTypes, get the array element (index) before this
+  //console.log(currentSlot, trackTypes[0]);
+
 
   return currentSlot;
 }
@@ -332,10 +355,7 @@ function runSettings(currSettings) {
 }
 
 chrome.storage.sync.get(['plugin_settings'], function(result) {
-  if (!Object.keys(result).length) {
-    console.log('Run default settings');
-  } else {
-    console.log('Run settings:', result);
+  if (Object.keys(result).length) {
     settings = result.plugin_settings;
   }
 });
