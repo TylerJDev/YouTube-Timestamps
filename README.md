@@ -41,6 +41,8 @@ Please stick with this format when writing an issue
 
 
 ## Versioning
+0.2.7 - Fixed issue #7
+
 0.2.6 - Fixed issue #4
 
 0.2.5 - Added interface
@@ -56,6 +58,12 @@ Please stick with this format when writing an issue
 0.1.1 - Fixed issue #7 regarding timestamp HTML being displayed on videos without timestamps
 
 0.1.0 - Added Next/Previous track functionality
+
+## Future additions
+
+* Ability to "Favorite" timestamp
+* Option to show current timestamp in title
+* Force load of timestamps
 
 ## Authors
 

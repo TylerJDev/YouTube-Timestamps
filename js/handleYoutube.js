@@ -100,7 +100,7 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
   let currentTimestamp = timestampsCurrent.filter((currEle) => currEle[0].textContent === determineTimeSlot(currentVideoTime, timestampsCurrent.map((curr) => curr[0].textContent)));
 
   if (currentTimestamp.length === 2) {
-    //console.warn('2 non-unique timestamps found!');
+    console.warn('2 non-unique timestamps found!');
     //console.log(currentTimestamp);
     currentTimestamp = [currentTimestamp[1]];
   }
@@ -194,6 +194,12 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
       headingTimestampTitle.textContent = timestampObj.current_track;
     }
 
+    // If video does not contain timestamps, ensure timeStampObj is empty, only with key 'links_track'
+    if (timeStampObj.current_link !== undefined && timeStampObj.current_link.parentNode === null) {
+      timeStampObj = {'links_tracks': []};
+      return false;
+    }
+
     // Adjust colors based on current settings
     Array.from(document.querySelector('#yt_timestamp_container').children, currElem => currElem.setAttribute('style', 'background-color: ' + settings.color + ' !important'));
     Array.from(document.querySelectorAll('button.yt_disabled_btn'), (curr) => curr.classList.remove('yt_disabled_btn')); // Remove class from existing buttons
@@ -235,6 +241,7 @@ function grabTimestampText(ele, descr, href, nonUnique) {
 
   if (nonUnique.length > 1 && ele === nonUnique[nonUnique.length - 1] && timestampText.length === 2) {
     timestampText.shift();
+    console.log('shift!');
     //console.log(timestampText);
   }
 
@@ -276,8 +283,11 @@ function determineTimeSlot(time, tracks) { // 65, ['00:03', '2:38', '4:00'];
 
   // Find the exact timestamp that matches the above var "trackTypes"
   const currentSlot = tracks[tracks.indexOf(trackTypes[0]) - 1]; // Find index of trackTypes, get the array element (index) before this
-  //console.log(currentSlot, trackTypes[0]);
+  // console.log(currentSlot, trackTypes);
 
+  if (currentSlot === undefined && currTime < timestampToSeconds(trackTypes[0])) { // This is for a specific issue, @ watch?v=_MVcJDzX-OU
+    return trackTypes[0]; // If no timestamp is found (currentSlot) and current video time is LESS than first trackTypes item, return first trackTypes item
+  }
 
   return currentSlot;
 }
