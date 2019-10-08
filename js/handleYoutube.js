@@ -4,6 +4,7 @@ let activeTimeUpdate = false;
 let currentDescr;
 let mutationSet = false;
 let cContent = false;
+let timestampHistory = {'history': {}};
 let withinComments = '';
 let settings = {'toggle_heading': 'true', 'disable_background': 'true', 'below_title': 'true', 'on_video': 'false'};
 
@@ -24,8 +25,19 @@ const targetObserve = new MutationObserver(function(cMutation) {
       function timeUpdate() {
         // Check for current track
         const boolPara = timeStampObj.links_tracks.length ? false : true; // (currentHref !== timeStampObj.current_video) ? true : false; // if not href from previous timestampObj ...
+
+        if (Object.keys(timestampHistory.history).length) {
+          let historyKeys = Object.keys(timestampHistory.history);
+
+          if (historyKeys.indexOf(window.location.href.substring(0, 43)) >= 0) {
+            // console.log(`Found previous timestamp comment, at ${timestampHistory.history[window.location.href.substring(0, 43)]}`, document.querySelector('#comments #sections > #contents').children[timestampHistory.history[window.location.href.substring(0, 43)]]);
+            cContent = document.querySelector('#comments #sections > #contents').children[timestampHistory.history[window.location.href.substring(0, 43)]];
+          }
+        }
+
         const timeObj = findCurrentTimestamps(Math.floor(video.currentTime), boolPara, timeStampObj.links_tracks, cContent);
 
+        console.log(timeObj);
         if (timeObj) {
           timeStampObj = timeObj;
         } else {
@@ -74,10 +86,8 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
   }
 
   const currentLinks = Array.from(descriptionContent.querySelectorAll('a'));
-  // var timestampsCurrent = [];
   if (searchForTimestamps === true) {
 
-    //console.log(descriptionContentFrag.querySelectorAll('a'));
     // Grab the corresponding timestamp text
     currentLinks.forEach(function(curr, index) {
       const val = timestampToSeconds(curr.textContent);
@@ -85,13 +95,10 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
         curr.classList.add('yt_timestamp_link'); // Add class to proper timestamp link
 
         // Check if link is not unique
-        //console.log(curr);
         let this_href = curr.attributes.href.value;
-        let duplicateLinks = descriptionContent.querySelectorAll(`a[href="${this_href}"]`); // descriptionContentFrag.querySelectorAll(`a[href="${this_href}"]`);
+        let duplicateLinks = descriptionContent.querySelectorAll(`a[href="${this_href}"]`);
 
-        //if (duplicateLinks.length === 1 && duplicateLinks[duplicateLinks.length - 1] === curr) {
-          timestampsCurrent.push([curr, grabTimestampText(curr, descriptionContent, this_href, duplicateLinks)]); // timestampToSeconds returns an integer
-        //}
+        timestampsCurrent.push([curr, grabTimestampText(curr, descriptionContent, this_href, duplicateLinks)]); // timestampToSeconds returns an integer
       }
     });
   }
@@ -101,7 +108,6 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
 
   if (currentTimestamp.length === 2) {
     console.warn('2 non-unique timestamps found!');
-    //console.log(currentTimestamp);
     currentTimestamp = [currentTimestamp[1]];
   }
 
@@ -306,12 +312,14 @@ function checkCommentsForTimestamps() {
         for (const currNode in toArray) {
           if (findCurrentTimestamps(Math.floor(document.querySelector('#container .html5-video-container > video.video-stream').currentTime), true, [], toArray[currNode]) !== false) {
             cContent = toArray[currNode];
+            timestampHistory.history[window.location.href.substring(0, 43)] = Array.from(toArray[currNode].parentNode.children).indexOf(toArray[currNode])
+
             break;
           }
         }
 
         if (cContent === false) { // If no timestamps are found within the comments
-          console.log('None here!');
+          // console.log('None here!');
           withinComments = false;
         }
       });
