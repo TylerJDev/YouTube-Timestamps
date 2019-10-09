@@ -37,7 +37,6 @@ const targetObserve = new MutationObserver(function(cMutation) {
 
         const timeObj = findCurrentTimestamps(Math.floor(video.currentTime), boolPara, timeStampObj.links_tracks, cContent);
 
-        console.log(timeObj);
         if (timeObj) {
           timeStampObj = timeObj;
         } else {
@@ -201,7 +200,12 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
     }
 
     // If video does not contain timestamps, ensure timeStampObj is empty, only with key 'links_track'
-    if (timeStampObj.current_link !== undefined && timeStampObj.current_link.parentNode === null) {
+    if (timeStampObj.current_link !== undefined && (timeStampObj.current_link.parentNode === null || timeStampObj.current_link.href.substring(0, 43) !== window.location.href.substring(0, 43))) {
+      if (timestampObj.current_track !== timeStampObj.current_track) {
+        timeStampObj = timestampObj;
+        return timestampObj;
+      }
+
       timeStampObj = {'links_tracks': []};
       return false;
     }
