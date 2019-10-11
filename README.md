@@ -41,6 +41,8 @@ Please stick with this format when writing an issue
 
 
 ## Versioning
+0.2.8 - Fixed issue #13
+
 0.2.8 - Fixed issue #11
 
 0.2.7 - Fixed issue #7

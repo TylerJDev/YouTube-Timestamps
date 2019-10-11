@@ -122,7 +122,7 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
     }
 
     timestampObj.links_tracks.forEach(function(x, index) {
-      if (x[1] === timestampObj.current_track) {
+      if (x[0] === timestampObj.current_link) {      // if (x[1] === timestampObj.current_track) {
         timestampObj.current_index = index;
       }
     });
