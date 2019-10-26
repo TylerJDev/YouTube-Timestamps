@@ -238,28 +238,41 @@ function grabTimestampText(ele, descr, href, nonUnique) {
       defTitle = curr;
       return curr;
     } else if (siblings[0] !== null &&
-      (siblings[0].textContent.split('\n').length > 1 && curr.indexOf(siblings[0].textContent.trim().split('\n').pop()) >= 0)) {
+      (siblings[0].textContent.split('\n').length > 1 && curr.indexOf(siblings[0].textContent.trim().split('\n').pop()) >= 0 && curr.indexOf(ele.textContent) >= 0)) {
       return siblings[0].textContent.split('\n').pop();
     } else if (siblings[1] !== null &&
       (siblings[1].textContent.split('\n').length > 1 && curr.indexOf(siblings[1].textContent.trim().split('\n').pop()) >= 0)) {
       return siblings[1].textContent.split('\n').pop();
     } else if (curr.indexOf(ele.textContent) >= 0 && curr.replace(ele.textContent).trim().length) {
-      //console.log('option 5');
       return curr.replace(ele.textContent).trim();
     }
   });
 
   if (nonUnique.length > 1 && ele === nonUnique[nonUnique.length - 1] && timestampText.length === 2) {
     timestampText.shift();
-    console.log('shift!');
-    //console.log(timestampText);
   }
 
   if (timestampText.length <= 5) {
-    return timestampText[0].replace(ele.textContent, '').trim().replace(/[()\[\]-] +/gi, '');
+    return parseString(timestampText[0], ele.textContent);
   } else {
-    return defTitle;
+    return parseString(defTitle, ele.textContent);
   }
+}
+
+/** Parse Timestamp Text
+*
+* @param {string} str - The string to pare
+* @param {string} content - The original timestamp itself ("0:00")
+*
+* @example
+*
+*   parseString('1:00 Best Track Ever', '1:00')
+*/
+
+const parseString = (str, content) => {
+  return str.replace(content, '')
+    .replace(/[()\[\]-] +/gi, '')
+    .replace(':', '').trim();
 }
 
 function timestampToSeconds(timestamp) {
