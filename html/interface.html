@@ -73,81 +73,154 @@
       text-align: center;
       color: #FFFFFF;
     }
-  </style>
-</head>
-<body>
-  <div id="container">
-    <div id="tabs">
-      <div id="tab_1" class="tab_pill">
-        <h2>Settings</h2>
-      </div>
-    </div>
 
-    <div id="main_body">
-      <div id="ui_style">
-        <h1 class="container_heading">UI Style</h1>
-        <label for="color_input">Color</label>
+    .btn-container {
+      width: 100%;
+      text-align: center;
+    }
+
+    #reset_settings {
+      border: none !important;
+      background-color: #423d47;
+      color: white;
+      padding: 8px;
+      font-size: 0.8rem;
+      border-radius: 8px;
+    }
+
+    #color_picker_list {
+      display: inline-block;
+      list-style-type: none;
+      width: 195px;
+      background-color: #777;
+      border: 1px solid black;
+      margin: 0;
+      padding: 10px 3px 3px 3px;
+      position: absolute;
+      overflow-y: scroll;
+      max-height: 150px;
+    }
+
+    #color_picker_list > li {
+      padding: 3px;
+      border: 3px solid transparent;
+    }
+
+    #combobox > input {
+      width: 202px;
+      margin: 0;
+      padding: 0;
+      background-color: #423d47;
+      border: none;
+      padding: 8px;
+      color: white;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .focused, #color_picker_list > li:hover {
+      border: 3px dotted #0076e5 !important;
+    }
+
+    .color_box {
+      width: 12px;
+      height: 12px;
+      display: inline-block;
+      margin-right: 10px;
+      border: 1px solid black;
+      border-radius: 3px;
+    }
+
+    #submitbtn {
+      border: none;
+      background-color: #504c54;
+      color: white;
+      padding: 5px;
+      width: 100%;
+      margin-top: 7px;
+      border-radius: 5px;
+    }
+
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <div id="tabs">
+        <div id="tab_1" class="tab_pill">
+          <h1 id="mainHeading">YouTube Timestamp - Settings</h1>
+        </div>
+      </div>
+
+      <div id="main_body">
+        <div id="ui_style">
+          <!-- <h1 class="container_heading">UI Style</h1> -->
+          <label id="color_picker_label" aria-label="Pick a Color">Color</label>
           <div>
             <!-- <span>Pick a color, i.e, (Red, Blue)</span> -->
-            <input type="text" id="color_input" placeholder="HEX & RGB Supported">
+
+            <div id="comboxbox_container">
+              <div id="combobox" role="combobox" aria-haspopup="listbox">
+                <input id="color_picker" type="text" aria-autocomplete="list" aria-activedescendant="" aria-expanded="false" aria-labelledby="color_picker_label" placeholder="Pick a Color (Name, HEX)">
+              </div>
+
+              <ul id="color_picker_list" class="listbox hidden" role="listbox" aria-labelledby="color_picker_label">
+                <!-- <li id="color_picker_item_0" role="option" aria-selected="false">example</li> -->
+              </ul>
+            </div>
+
+            <button id="submitbtn" type="submit" aria-describedby="color_picker_label">Submit</button>
           </div>
+        </div>
+
+        <div id="tier_setings">
+          <div id="ui_settings">
+            <form>
+              <fieldset>
+                <legend class="container_heading">UI Settings</legend>
+                <div class="form-container">
+                  <input type="checkbox" id="toggle_heading">
+                  <label for="toggle_heading">Enable Heading</label>
+
+                </div>
+
+                <div class="form-container">
+                  <input type="checkbox" id="disable_background">
+                  <label for="disable_background">Enable Background</label>
+                </div>
+
+              </fieldset>
+            </form>
+          </div>
+
+          <div id="ui_placement">
+            <form>
+              <fieldset>
+                <legend class="container_heading">UI Placement</legend>
+
+                <div class="form-container">
+                  <input type="radio" id="below_title" class="yt_radio">
+                  <label for="below_title">Below Title (default)</label>
+
+                </div>
+
+                <div class="form-container">
+                  <input type="radio" id="above_title" class="yt_radio">
+                  <label for="above_title">Above Title</label>
+
+                </div>
+              </fieldset>
+            </form>
+          </div>
+
+          <div class="btn-container">
+            <button id="reset_settings" aria_describedby="mainHeading" type="submit">Reset to Default</button>
       </div>
-
-      <div id="tier_setings">
-      <div id="ui_settings">
-        <form>
-          <fieldset>
-            <legend class="container_heading">UI Settings</legend>
-            <div class="form-container">
-              <input type="checkbox" id="toggle_heading">
-              <label for="toggle_heading">Enable Heading</label>
-
-            </div>
-
-            <div class="form-container">
-              <input type="checkbox" id="disable_background">
-              <label for="disable_background">Enable Background</label>
-
-            </div>
-          </fieldset>
-        </form>
-      </div>
-
-      <div id="ui_placement">
-        <form>
-          <fieldset>
-            <legend class="container_heading">UI Placement</legend>
-
-            <div class="form-container">
-              <input type="radio" id="below_title" class="yt_radio">
-              <label for="below_title">Below Title (default)</label>
-
-            </div>
-
-            <div class="form-container">
-              <input type="radio" id="above_title" class="yt_radio">
-              <label for="above_title">Above Title</label>
-
-            </div>
-
-            <!-- <div class="form-container">
-              <input type="radio" id="right_panel" class="yt_radio">
-              <label for="right_panel">Right Panel</label>
-
-            </div> -->
-
-            <!-- <div class="form-container">
-              <input type="radio" id="on_video" class="yt_radio">
-              <label for="on_video">On Video</label>
-
-            </div> -->
-          </fieldset>
-        </form>
-      </div>
-
     </div>
     </div>
   </div>
   <script src="../js/interface.js"></script>
+  <script src="../js/combobox.js"></script>
 </body>
 </html>

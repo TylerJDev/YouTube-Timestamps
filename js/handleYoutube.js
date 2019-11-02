@@ -270,6 +270,14 @@ function grabTimestampText(ele, descr, href, nonUnique) {
 */
 
 const parseString = (str, content) => {
+  var hasTimestamp = str.replace(/[\[\]()]+/g, '').split(' ').filter(currStr => timestampToSeconds(currStr));
+
+  if (hasTimestamp.length) {
+    for (let foundStamps in hasTimestamp) {
+      str = str.replace(hasTimestamp[foundStamps], '');
+    }
+  }
+
   return str.replace(content, '')
     .replace(/[()\[\]-] +/gi, '')
     .replace(':', '').trim();
@@ -336,7 +344,6 @@ function checkCommentsForTimestamps() {
         }
 
         if (cContent === false) { // If no timestamps are found within the comments
-          // console.log('None here!');
           withinComments = false;
         }
       });
@@ -356,26 +363,29 @@ function checkCommentsForTimestamps() {
 }
 
 function runSettings(currSettings) {
-  // What changed
   var changedSetting = Object.keys(currSettings.plugin_settings.oldValue).filter(function(curr, idx) {
     if (currSettings.plugin_settings.oldValue[curr] !== currSettings.plugin_settings.newValue[curr]) {
       return curr;
     }
   });
 
-  if (changedSetting.join(' ') === 'toggle_heading') {
+  console.log(currSettings);
+  console.log(changedSetting);
+
+  // debugger;
+  if (changedSetting.indexOf('toggle_heading') > -1) {
     settings.toggle_heading === true ?
     document.querySelector('#yt_timestamp_title_playing').classList.remove('yt_timestamps_hide') :
     document.querySelector('#yt_timestamp_title_playing').classList.add('yt_timestamps_hide');
   }
 
-  if (changedSetting.join(' ') === 'disable_background') {
+  if (changedSetting.indexOf('disable_background') > -1) {
     settings.disable_background === true ?
     Array.from(document.querySelectorAll('h2.yt_timestamp_nowplaying, button.yt_timestamp_controls, a.selected_yt_timestamp_link'), x => x.classList.remove('yt_timestamps_bg_hide')) :
     Array.from(document.querySelectorAll('h2.yt_timestamp_nowplaying, button.yt_timestamp_controls, a.selected_yt_timestamp_link'), x => x.classList.add('yt_timestamps_bg_hide'));
   }
 
-  if (changedSetting.join(' ') === 'above_title below_title') {
+  if (changedSetting.indexOf('above_title') > -1 || changedSetting.indexOf('below_title') > -1) {
     if (settings.below_title) {
       document.querySelector('#info #container').insertBefore(document.querySelector('#yt_timestamp_container'), document.querySelector('#container > h1.title').nextSibling);
     } else if (settings.above_title) {
@@ -383,7 +393,7 @@ function runSettings(currSettings) {
     }
   }
 
-  if (changedSetting.join(' ') === 'color') {
+  if (changedSetting.indexOf('color') > -1) {
     // Check if current color !== settings.color
     Array.from(document.querySelector('#yt_timestamp_container').children, currElem => currElem.setAttribute('style', 'background-color: ' + settings.color + ' !important'));
   }

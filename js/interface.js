@@ -29,16 +29,59 @@ const checkboxes = {
 
 Array.from(document.querySelectorAll('#container #tier_setings input'), currEle => currEle.addEventListener('click', checkboxState));
 
-document.querySelector('#color_input').addEventListener('keydown', function(e) {
+document.querySelector('#color_picker').addEventListener('keydown', function(e) {
   if (e.keyCode === 13 || e.keyCode === 32) {
-    var colorValue = this.value.match(/[a-zA-Z0-9#]/g).join('');
+    const colorValue = this.value.match(/[a-zA-Z0-9#]/g).join('');
     consoleLogger('log', ['Color Value:', colorValue]);
 
+    const item = ListBoxComboBox.combobox.attributes['aria-activedescendant'].value.length ? document.querySelector(`#${ListBoxComboBox.combobox.attributes['aria-activedescendant'].value}`) : '';
+
     settings.color = colorValue;
+    if (item !== null && item !== '') {
+      settings.color = item.textContent.split(' ').join('');
+    }
+
     chrome.storage.sync.set({'plugin_settings': settings}, function() {
       consoleLogger('log', ['Settings set:', settings]);
     });
   }
+});
+
+document.querySelector('#color_picker_list').addEventListener('click', function(e) {
+  const elem = e.target;
+
+  if (e.target.attributes['role'] !== undefined && e.target.attributes['role'].value === 'option') {
+    const selected = elem;
+    settings.color = elem.textContent.split(' ').join('');
+
+    chrome.storage.sync.set({'plugin_settings': settings}, function() {
+      consoleLogger('log', ['Settings set:', settings]);
+    });
+  }
+});
+
+
+document.querySelector('#submitbtn').addEventListener('click', function(e) {
+  if (ListBoxComboBox.combobox.value.length) {
+    const colorValue = ListBoxComboBox.combobox.value.match(/[a-zA-Z0-9#]/g).join('');
+    settings.color = colorValue
+
+    chrome.storage.sync.set({'plugin_settings': settings}, function() {
+      consoleLogger('log', ['Settings set:', settings]);
+    });
+  }
+});
+
+document.querySelector('#reset_settings').addEventListener('click', function() {
+  settings = {'toggle_heading': true, 'disable_background': true, 'below_title': true, 'above_title': false, 'color': '#575757'};
+  ListBoxComboBox.combobox.value = '';
+
+  for (let defState in Object.keys(settings)) {
+    if (Object.keys(settings)[defState] !== 'color')
+      document.querySelector('#' + Object.keys(settings)[defState]).checked = Object.values(settings)[defState];
+  }
+
+  setToStorage();
 });
 
 function checkboxState() {
@@ -48,9 +91,11 @@ function checkboxState() {
   setToStorage(...checkboxes[findKey](this));
 }
 
-function setToStorage(key, value) {
-  settings[key] = value;
-  consoleLogger('log', [key])
+function setToStorage(key=false, value=false) {
+  if (key !== false) {
+    settings[key] = value;
+    consoleLogger('log', [key]);
+  }
 
   chrome.storage.sync.set({'plugin_settings': settings}, function() {
     consoleLogger('log', ['Settings set:', settings]);
@@ -74,7 +119,7 @@ function runSettings() {
 
     // Set color input placeholder
     if (settings.color !== '#575757') { // !== Default color
-      document.querySelector('#color_input').value = settings.color;
+      document.querySelector('#color_picker').value = settings.color;
     }
   });
 }

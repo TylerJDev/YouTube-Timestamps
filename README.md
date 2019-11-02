@@ -41,6 +41,8 @@ Please stick with this format when writing an issue
 
 
 ## Versioning
+0.3.0 - Added proper A11Y, improved color input with combobox functionality 
+
 0.2.9 - Fixed issue #5 & improved parsing
 
 0.2.8 - Fixed issue #13
