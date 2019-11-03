@@ -1,4 +1,4 @@
-let settings = {'toggle_heading': 'true', 'disable_background': 'false', 'below_title': 'true', 'above_title': 'false', 'color': '#575757'};
+let settings = {'toggle_heading': true, 'disable_background': true, 'below_title': true, 'above_title': false, 'color': '#575757'};
 const allowDebug = true;
 const checkboxes = {
   "toggle_heading": function(ele) {

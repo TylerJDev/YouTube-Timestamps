@@ -41,6 +41,12 @@ Please stick with this format when writing an issue
 
 
 ## Versioning
+1.0.2 - Added another fix regarding plugin setting, changed string value to boolean.
+
+1.0.1 - Fixed issue with plugin setting, added new icon
+
+1.0.0 - Initial Release
+
 0.3.0 - Added proper A11Y, improved color input with combobox functionality 
 
 0.2.9 - Fixed issue #5 & improved parsing
