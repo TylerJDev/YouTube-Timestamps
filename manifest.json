@@ -1,7 +1,7 @@
 {
-  "name": "YouTube Timestamps 2.0",
-  "version": "0.3.0",
-  "description": "Gets collection of timestamps from video description or comments.",
+  "name": "YouTube Timestamps",
+  "version": "1.0.0",
+  "description": "YouTube Timestamps is a plugin to track timestamps on any video which contains them.",
   "permissions": ["*://*.youtube.com/*", "storage"],
   "content_scripts": [
     {
@@ -14,5 +14,10 @@
   "browser_action": {
     "default_popup": "html/interface.html"
   },
-  "manifest_version": 2
+  "manifest_version": 2,
+  "icons": {
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  }
 }

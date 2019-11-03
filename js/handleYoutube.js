@@ -1,4 +1,5 @@
 const targetEle = document.querySelector('head > title');
+const allowDebug = true;
 let timeStampObj = {'links_tracks': []};
 let activeTimeUpdate = false;
 let currentDescr;
@@ -9,7 +10,7 @@ let withinComments = '';
 let settings = {'toggle_heading': 'true', 'disable_background': 'true', 'below_title': 'true', 'on_video': 'false'};
 
 const targetObserve = new MutationObserver(function(cMutation) {
-  console.log('Change in title!');
+  consoleLogger('log', 'Change in title!');
   // Check the URL, ensure that it's a "video"
   const currentHref = window.location.href;
 
@@ -86,7 +87,6 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
 
   const currentLinks = Array.from(descriptionContent.querySelectorAll('a'));
   if (searchForTimestamps === true) {
-
     // Grab the corresponding timestamp text
     currentLinks.forEach(function(curr, index) {
       const val = timestampToSeconds(curr.textContent);
@@ -122,7 +122,7 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
     }
 
     timestampObj.links_tracks.forEach(function(x, index) {
-      if (x[0] === timestampObj.current_link) {      // if (x[1] === timestampObj.current_track) {
+      if (x[0] === timestampObj.current_link) {
         timestampObj.current_index = index;
       }
     });
@@ -164,7 +164,9 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
       if (currentControlType === 'next') {
         document.querySelector('#container .html5-video-container > video.video-stream').currentTime = timestampToSeconds(timeStampObj.links_tracks[timeStampObj.current_index + 1][0].textContent);
       } else if (currentControlType === 'previous') {
-        document.querySelector('#container .html5-video-container > video.video-stream').currentTime = timestampToSeconds(timeStampObj.links_tracks[timeStampObj.current_index - 1][0].textContent);
+        let count = timestampToSeconds(timeStampObj.current_link.textContent) === timestampToSeconds(timeStampObj.links_tracks[timeStampObj.current_index - 1][0].textContent) ? 2 : 1;
+
+        document.querySelector('#container .html5-video-container > video.video-stream').currentTime = timestampToSeconds(timeStampObj.links_tracks[timeStampObj.current_index - count][0].textContent);
       }
     }
 
@@ -210,11 +212,22 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
       return false;
     }
 
-    // Adjust colors based on current settings
-    Array.from(document.querySelector('#yt_timestamp_container').children, currElem => currElem.setAttribute('style', 'background-color: ' + settings.color + ' !important'));
-    Array.from(document.querySelectorAll('button.yt_disabled_btn'), (curr) => curr.classList.remove('yt_disabled_btn')); // Remove class from existing buttons
-    if (hideBtn !== false) {
+    // Adjust color based on current settings within {settings} global
+    if (document.querySelector('#yt_timestamp_container').children.length 
+       && (document.querySelector('#yt_timestamp_container').children[0].getAttribute('style') !== null
+       && document.querySelector('#yt_timestamp_container').children[0].getAttribute('style').indexOf(settings.color.trim() + ' !important') === -1)
+       ) {
+      consoleLogger('log', 'Color has been changed', 'to', settings.color.trim());
+      Array.from(document.querySelector('#yt_timestamp_container').children, currElem => currElem.setAttribute('style', 'background-color: ' + settings.color.trim() + ' !important'));
+    }
+
+    if (hideBtn !== false 
+       && (document.querySelector(hideBtn) !== null && document.querySelector(hideBtn).classList.contains('yt_disabled_btn') === false)) {
+      consoleLogger('log', 'yt_disabled_btn has been added to:', hideBtn);
       document.querySelector(hideBtn).classList.add('yt_disabled_btn');
+    } else if (hideBtn === false && document.querySelector('button.yt_disabled_btn') !== null) {
+      consoleLogger('log', 'yt_disabled_btn has been removed');
+      document.querySelector('button.yt_disabled_btn') !== null ? document.querySelector('button.yt_disabled_btn').classList.remove('yt_disabled_btn') : '';
     }
 
     return timestampObj;
@@ -259,7 +272,8 @@ function grabTimestampText(ele, descr, href, nonUnique) {
   }
 }
 
-/** Parse Timestamp Text
+/** 
+* Parse Timestamp Text
 *
 * @param {string} str - The string to pare
 * @param {string} content - The original timestamp itself ("0:00")
@@ -314,7 +328,6 @@ function determineTimeSlot(time, tracks) { // 65, ['00:03', '2:38', '4:00'];
 
   // Find the exact timestamp that matches the above var "trackTypes"
   const currentSlot = tracks[tracks.indexOf(trackTypes[0]) - 1]; // Find index of trackTypes, get the array element (index) before this
-  // console.log(currentSlot, trackTypes);
 
   if (currentSlot === undefined && currTime < timestampToSeconds(trackTypes[0])) { // This is for a specific issue, @ watch?v=_MVcJDzX-OU
     return trackTypes[0]; // If no timestamp is found (currentSlot) and current video time is LESS than first trackTypes item, return first trackTypes item
@@ -369,10 +382,9 @@ function runSettings(currSettings) {
     }
   });
 
-  console.log(currSettings);
-  console.log(changedSetting);
+  consoleLogger('log', currSettings);
+  consoleLogger('log', changedSetting);
 
-  // debugger;
   if (changedSetting.indexOf('toggle_heading') > -1) {
     settings.toggle_heading === true ?
     document.querySelector('#yt_timestamp_title_playing').classList.remove('yt_timestamps_hide') :
@@ -397,6 +409,11 @@ function runSettings(currSettings) {
     // Check if current color !== settings.color
     Array.from(document.querySelector('#yt_timestamp_container').children, currElem => currElem.setAttribute('style', 'background-color: ' + settings.color + ' !important'));
   }
+}
+
+function consoleLogger(logLevel, ...args) {
+  if (allowDebug)
+    console[logLevel](...args);
 }
 
 chrome.storage.sync.get(['plugin_settings'], function(result) {
