@@ -425,5 +425,5 @@ try {
     timestampToSeconds, determineTimeSlot, findCurrentTimestamps,
   };
 } catch (ReferenceError) {
-  consoleLogger('log'. 'temp');
+  consoleLogger('log', 'temp');
 }
