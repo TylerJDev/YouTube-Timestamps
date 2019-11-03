@@ -6,7 +6,8 @@ On YouTube, a content creator can add timestamps to either the description, or w
 
 ## Installing
 
-Soon to be released on the Google Chrome Web Store.
+Install via the Chrome Web Store
+[YouTube Timestamps](https://chrome.google.com/webstore/detail/youtube-timestamps/mopckogdjleiljpnmmafmlieekoenhbe)
 
 You can install this app by downloading/cloning this repository,
 Unzip the folder, and load unpacked on Chrome.
