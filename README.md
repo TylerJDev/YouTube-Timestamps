@@ -41,6 +41,8 @@ Please stick with this format when writing an issue
 
 
 ## Versioning
+1.0.3 - Removed console log(s), fixed issue where timestamp might be undefined
+
 1.0.2 - Added another fix regarding plugin setting, changed string value to boolean.
 
 1.0.1 - Fixed issue with plugin setting, added new icon

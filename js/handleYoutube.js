@@ -1,5 +1,5 @@
 const targetEle = document.querySelector('head > title');
-const allowDebug = true;
+const allowDebug = false;
 let timeStampObj = {'links_tracks': []};
 let activeTimeUpdate = false;
 let currentDescr;
@@ -31,7 +31,6 @@ const targetObserve = new MutationObserver(function(cMutation) {
           let historyKeys = Object.keys(timestampHistory.history);
 
           if (historyKeys.indexOf(window.location.href.substring(0, 43)) >= 0) {
-            // console.log(`Found previous timestamp comment, at ${timestampHistory.history[window.location.href.substring(0, 43)]}`, document.querySelector('#comments #sections > #contents').children[timestampHistory.history[window.location.href.substring(0, 43)]]);
             cContent = document.querySelector('#comments #sections > #contents').children[timestampHistory.history[window.location.href.substring(0, 43)]];
           }
         }
@@ -47,7 +46,6 @@ const targetObserve = new MutationObserver(function(cMutation) {
             ytContent.parentNode.removeChild(ytContent); // Remove appended content
           }
 
-          // console.log(withinComments);
           if (withinComments === false) {
             activeTimeUpdate = false;
             video.removeEventListener('timeupdate', timeUpdate);
@@ -127,11 +125,6 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
       }
     });
 
-    /* console.log(timestampObj.current_link, withinComments);
-    if (!timestampToSeconds(timestampObj.current_link.textContent)) {
-      return commentContent === false ? checkCommentsForTimestamps() : false; // If no links (timestamps) are found in the description
-    } */
-
     if (!timestampObj.current_link.classList.contains('selected_yt_timestamp_link')) {
       // Remove aria-describedby
       Array.from(document.querySelectorAll('a.selected_yt_timestamp_link'), (curr) => curr.removeAttribute('aria-describedby'));
@@ -175,7 +168,6 @@ function findCurrentTimestamps(currentVideoTime=0, searchForTimestamps=true, tim
     if (headingTimestampTitle === null) {
       const hideHeading = settings.toggle_heading === true ? '' : 'yt_timestamps_hide';
       const containerPosition = settings.below_title === true ? 'afterend' : settings.above_title === true ? 'beforebegin' : 'afterend';
-      console.log(settings.toggle_heading, settings, hideHeading);
 
       // Create a container
       document.querySelector('#container > h1.title').insertAdjacentHTML(containerPosition, `<div id="yt_timestamp_container"></div>`);
@@ -298,7 +290,8 @@ const parseString = (str, content) => {
 }
 
 function timestampToSeconds(timestamp) {
-  if (timestamp.split(':').length <= 3 && timestamp.indexOf(':') >= 0) { // If valid timestamp, i.e, timestamp.split(':') => ['00', '00', '00'].length = 3
+  // If valid timestamp, i.e, timestamp.split(':') => ['00', '00', '00'].length = 3
+  if (timestamp !== undefined && timestamp.split(':').length <= 3 && timestamp.indexOf(':') >= 0) { 
     timestamp = timestamp.replace(/[:]/gi, '');
 
     // timestamp = 2:00, needs to be 00:02:00
@@ -432,5 +425,5 @@ try {
     timestampToSeconds, determineTimeSlot, findCurrentTimestamps,
   };
 } catch (ReferenceError) {
-  console.log('temp');
+  consoleLogger('log'. 'temp');
 }

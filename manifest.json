@@ -1,6 +1,6 @@
 {
   "name": "YouTube Timestamps",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "YouTube Timestamps is a plugin to track timestamps on any video which contains them.",
   "permissions": ["*://*.youtube.com/*", "storage"],
   "content_scripts": [
