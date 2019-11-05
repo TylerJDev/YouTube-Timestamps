@@ -7,7 +7,7 @@ let mutationSet = false;
 let cContent = false;
 let timestampHistory = {'history': {}};
 let withinComments = '';
-let settings = {'toggle_heading': true, 'disable_background': true, 'below_title': true, 'above_title': false};
+let settings = {'toggle_heading': true, 'disable_background': true, 'below_title': true, 'above_title': false, 'color': '#575757'};
 
 const targetObserve = new MutationObserver(function(cMutation) {
   consoleLogger('log', 'Change in title!');

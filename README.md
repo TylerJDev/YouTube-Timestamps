@@ -42,6 +42,8 @@ Please stick with this format when writing an issue
 
 
 ## Versioning
+1.0.4 - Added initial setting "color" to handleYoutube.js
+
 1.0.3 - Removed console log(s), fixed issue where timestamp might be undefined
 
 1.0.2 - Added another fix regarding plugin setting, changed string value to boolean.
