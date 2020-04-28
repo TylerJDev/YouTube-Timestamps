@@ -6,19 +6,49 @@
   color: white !important;
 }
 
+
 .yt_timestamp_nowplaying, .yt_timestamp_controls {
-  /* border-radius: 3px;
-  padding: 3px !important;
-  margin-left: 5px !important; */
   font-size: 1.4rem !important;
-  /* background-color: #777 !important;
-  color: white !important;
-  display: inline-block !important; */
-  border-radius: 12px !important;
-  background-color: #575757; /* #777 !important; */
-  color: white !important;
   display: inline-block;
   padding: 5px !important;
+  background-color: white;
+  border-radius: 0%;
+  color: black;
+  border: 1px solid black !important;
+  box-shadow: 2px 3px 0px 0px black;
+  transition: 1000ms;
+}
+
+.yt_timestamp_controls svg path {
+  fill: black !important;
+  transition: 1000ms;
+}
+
+.yt_timestamp_default_style, html[dark="true"] .yt_timestamp_default_style {
+  border-radius: 12px !important;
+  background-color: #575757 !important;
+  color: white !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.yt_timestamp_default_style svg path, html[dark="true"] .yt_timestamp_default_style svg path {
+  fill: #fff !important;
+}
+
+/* Dark Mode */
+html[dark="true"] .yt_timestamp_nowplaying, html[dark="true"] .yt_timestamp_controls {
+  display: inline-block;
+  padding: 5px !important;
+  background-color: #181818;
+  border-radius: 0%;
+  color: white !important;
+  border: 1px solid white;
+  box-shadow: 2px 3px 0px 0px white;
+}
+
+html[dark="true"] .yt_timestamp_controls svg path {
+  fill: white !important
 
 }
 
@@ -61,7 +91,3 @@ a.yt_timestamps_bg_hide.selected_yt_timestamp_link  {
 .yt_timestamps_bg_hide svg path {
   fill: black !important;
 }
-
-/* .yt_timestamps_right {
-  float: right !important;
-} */
