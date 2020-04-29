@@ -60,6 +60,7 @@ button.yt_timestamp_controls {
 
 #yt_timestamp_container {
   display: flex;
+  margin-bottom: 4px !important;
 }
 
 button.yt_timestamp_prev {
@@ -81,6 +82,8 @@ button.yt_disabled_btn {
 h2.yt_timestamps_bg_hide, button.yt_timestamps_bg_hide {
   background-color: transparent !important;
   color: black !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 a.yt_timestamps_bg_hide.selected_yt_timestamp_link  {
