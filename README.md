@@ -1,4 +1,4 @@
-# YouTube Timestamps
+# YouTube Timestamps ⏱️
 
 YouTube Timestamps is a plugin to track timestamps on any video which contains them.
 
